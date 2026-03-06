@@ -1,0 +1,14 @@
+{
+  "routes": [
+    {
+      "src": "/api/generate",
+      "dest": "api/generate.jsx"
+    }
+    // and if you want to fix that initial 404, we can redirect it to the API
+    {
+      "src": "/",
+      "status": 302,
+      "dest": "/api/generate?name=Manuel%20Sheen"
+    }
+  ]
+}
