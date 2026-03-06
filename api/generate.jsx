@@ -21,3 +21,5 @@ export default function () {
     return new Response(`Error: ${e.message}`, { status: 500 });
   }
 }
+
+// Version fix
