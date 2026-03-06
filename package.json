@@ -2,7 +2,7 @@
   "dependencies": {
     "@vercel/og": "latest"
   },
-  "engines": {
-    "node": "20.x"
+  "browser": {
+    "@vercel/og": "@vercel/og/dist/index.edge.js"
   }
 }
