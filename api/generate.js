@@ -27,25 +27,27 @@ export default async function handler(req, res) {
     // This tells the engine to draw the image from (0,0) to the FULL width and height
     ctx.drawImage(background, 0, 0, width, height);
 
-// --- 3. THE TEXT ---
+    // --- 3. THE TEXT ---
     ctx.fillStyle = '#0e1f13';
 
-    // NAME (Keep this centered)
+    // NAME (Centered at 50% width)
     ctx.textAlign = 'center'; 
     ctx.font = 'bold 120px "DiplomaFont", serif';
     ctx.fillText(name, width / 2, 520); 
-
-    // COHORT & DATE (Move to the right side)
-    // 'left' alignment makes the text start at the X coordinate and grow right
-    ctx.textAlign = 'left'; 
-
-    // Cohort (Placed at 1300px horizontally, which is roughly 2/3 of 1920)
+    
+    // COHORT & DATE (Both centered at the same X anchor point)
+    // Using 1450 as an example anchor point (roughly 3/4 to the right)
+    const rightAnchor = 1450; 
+    
+    ctx.textAlign = 'center'; // This is the magic fix
+    
+    // Cohort
     ctx.font = 'italic 50px "DiplomaFont", serif';
-    ctx.fillText(cohort, 1250, 775);
-
-    // Date (Aligned with the Cohort at 1300px)
+    ctx.fillText(cohort, rightAnchor, 775);
+    
+    // Date
     ctx.font = '50px "DiplomaFont", serif';
-    ctx.fillText(date, 1225, 925);
+    ctx.fillText(date, rightAnchor, 925);
 
     const buffer = canvas.toBuffer('image/jpeg', { quality: 0.95 });
     res.setHeader('Content-Type', 'image/jpeg');
@@ -54,12 +56,3 @@ export default async function handler(req, res) {
     res.status(500).send(`Alignment Error: ${error.message}`);
   }
 }
-
-
-
-
-
-
-
-
-
