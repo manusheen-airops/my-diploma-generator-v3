@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "node-html-to-image": "latest"
+    "@vercel/og": "latest"
   }
 }
