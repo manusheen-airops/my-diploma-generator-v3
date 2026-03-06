@@ -1,8 +1,5 @@
 {
   "dependencies": {
-    "@vercel/og": "latest"
-  },
-  "browser": {
-    "@vercel/og": "@vercel/og/dist/index.edge.js"
+    "node-html-to-image": "latest"
   }
 }
