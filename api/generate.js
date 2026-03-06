@@ -1,43 +1,46 @@
-import nodeHtmlToImage from 'node-html-to-image';
+import { ImageResponse } from '@vercel/og';
 
-export default async function handler(req, res) {
-  const { name = 'Graduate' } = req.query;
+export const config = {
+  runtime: 'edge',
+};
 
-  const image = await nodeHtmlToImage({
-    html: `
-      <html>
-        <body style="margin: 0; padding: 0;">
-          <div style="
-            width: 2000px;
-            height: 1414px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: url('https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg');
-            background-size: 100% 100%;
-            position: relative;
-          ">
-            <h1 style="
-              position: absolute;
-              top: 510px;
-              font-size: 85px;
-              color: #0e1f13;
-              font-family: serif;
-              font-weight: bold;
-              width: 100%;
-              text-align: center;
-            ">
-              ${name}
-            </h1>
-          </div>
-        </body>
-      </html>
-    `,
-    type: 'jpeg',
-    quality: 90
-  });
+export default function handler(req) {
+  const { searchParams } = new URL(req.url);
+  const name = searchParams.get('name') || 'Graduate Name';
 
-  // This tells the browser (and AirOps) "Here is your image file!"
-  res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-  res.end(image, 'binary');
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          backgroundImage: 'url(https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg)',
+          backgroundSize: '100% 100%',
+          position: 'relative',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <h1
+          style={{
+            position: 'absolute',
+            top: '510px', 
+            width: '100%',
+            textAlign: 'center',
+            fontSize: '85px',
+            color: '#0e1f13',
+            fontFamily: 'serif',
+            fontWeight: 'bold',
+          }}
+        >
+          {name}
+        </h1>
+      </div>
+    ),
+    {
+      width: 2000,
+      height: 1414,
+    }
+  );
 }
