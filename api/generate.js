@@ -4,43 +4,29 @@ export const config = {
   runtime: 'edge',
 };
 
-export default async function (req) {
-  const { searchParams } = new URL(req.url);
-  const name = searchParams.get('name') || 'Graduate Name';
+export default async function handler(req) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const name = searchParams.get('name') || 'Graduate';
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          backgroundImage: 'url(https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg)',
-          backgroundSize: '100% 100%',
-          position: 'relative',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <h1
-          style={{
-            position: 'absolute',
-            top: '510px', // This sits it perfectly on the signature/name line
-            width: '100%',
-            textAlign: 'center',
-            fontSize: '85px',
-            color: '#0e1f13', // Matches the GTMGen brand dark green/black
-            fontFamily: 'serif',
-            fontWeight: 'bold',
-          }}
-        >
-          {name}
-        </h1>
-      </div>
-    ),
-    {
-      width: 2000,
-      height: 1414,
-    }
-  );
+    return new ImageResponse(
+      (
+        <div style={{ 
+          display: 'flex', 
+          fontSize: 60, 
+          color: 'black', 
+          background: 'white', 
+          width: '100%', 
+          height: '100%', 
+          alignItems: 'center', 
+          justifyContent: 'center' 
+        }}>
+          Final Test: Hello {name}
+        </div>
+      ),
+      { width: 1200, height: 630 }
+    );
+  } catch (e) {
+    return new Response(`Error: ${e.message}`, { status: 500 });
+  }
 }
