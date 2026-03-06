@@ -1,46 +1,30 @@
-import { ImageResponse } from '@vercel/og';
+const { createCanvas, loadImage } = require('canvas');
 
-export const config = {
-  runtime: 'edge',
-};
+export default async function handler(req, res) {
+  const { name = 'Graduate' } = req.query;
 
-export default function handler(req) {
-  const { searchParams } = new URL(req.url);
-  const name = searchParams.get('name') || 'Graduate Name';
+  try {
+    // 1. Create the canvas
+    const canvas = createCanvas(2000, 1414);
+    const ctx = canvas.getContext('2d');
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          backgroundImage: 'url(https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg)',
-          backgroundSize: '100% 100%',
-          position: 'relative',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: 'serif', // This uses the built-in Edge serif font
-        }}
-      >
-        <h1
-          style={{
-            position: 'absolute',
-            top: '510px', 
-            width: '100%',
-            textAlign: 'center',
-            fontSize: '85px',
-            color: '#0e1f13',
-            fontWeight: 'bold',
-          }}
-        >
-          {name}
-        </h1>
-      </div>
-    ),
-    {
-      width: 2000,
-      height: 1414,
-    }
-  );
+    // 2. Load the Background
+    const background = await loadImage('https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg');
+    ctx.drawImage(background, 0, 0, 2000, 1414);
+
+    // 3. Set Text Style (Using built-in 'serif' to prevent crashes)
+    ctx.font = 'bold 85px serif';
+    ctx.fillStyle = '#0e1f13';
+    ctx.textAlign = 'center';
+    
+    // 4. Draw Name (Centered)
+    ctx.fillText(name, 1000, 510);
+
+    // 5. Send Image
+    const buffer = canvas.toBuffer('image/jpeg');
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.status(200).send(buffer);
+  } catch (error) {
+    res.status(500).send(`Generation Error: ${error.message}`);
+  }
 }
