@@ -21,15 +21,15 @@ export default async function handler(req, res) {
     const ctx = canvas.getContext('2d');
 
     const background = await loadImage('https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg');
-    ctx.drawImage(background, 0, 0, 2000, 1414);
+    ctx.drawImage(background, 0, 0, 1920, 1080);
 
     ctx.fillStyle = '#0e1f13';
     ctx.textAlign = 'center';
 
     // --- DRAW THE NAME ---
     // Increased size to 140px and moved down to 540px
-    ctx.font = 'bold 140px "DiplomaFont", serif';
-    ctx.fillText(name, 1000, 540); 
+    ctx.font = 'bold 220px "DiplomaFont", serif';
+    ctx.fillText(name, 1000, 700); 
 
     // --- DRAW THE COHORT TYPE ---
     // Smaller font, placed lower (adjust 850 based on your design)
@@ -48,3 +48,4 @@ export default async function handler(req, res) {
     res.status(500).send(`Design Error: ${error.message}`);
   }
 }
+
