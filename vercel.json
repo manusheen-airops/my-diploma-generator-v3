@@ -2,12 +2,7 @@
   "routes": [
     {
       "src": "/api/generate",
-      "dest": "api/generate.jsx"
-    },
-    {
-      "src": "/",
-      "status": 302,
-      "dest": "/api/generate?name=Manuel%20Sheen"
+      "dest": "api/generate.js" 
     }
   ]
 }
