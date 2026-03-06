@@ -32,8 +32,8 @@ export default async function handler(req, res) {
     ctx.textAlign = 'center';
 
     // Name (Adjust the '480' to move it up or down on your 1080p canvas)
-    ctx.font = 'bold 180px "DiplomaFont", serif';
-    ctx.fillText(name, width / 2, 480); 
+    ctx.font = 'bold 150px "DiplomaFont", serif';
+    ctx.fillText(name, width / 2, 600); 
 
     // Cohort
     ctx.font = 'italic 50px "DiplomaFont", serif';
@@ -50,3 +50,4 @@ export default async function handler(req, res) {
     res.status(500).send(`Alignment Error: ${error.message}`);
   }
 }
+
