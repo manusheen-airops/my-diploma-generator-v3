@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 
     // Date (Aligned with the Cohort at 1300px)
     ctx.font = '50px "DiplomaFont", serif';
-    ctx.fillText(date, 1250, 950);
+    ctx.fillText(date, 1150, 925);
 
     const buffer = canvas.toBuffer('image/jpeg', { quality: 0.95 });
     res.setHeader('Content-Type', 'image/jpeg');
@@ -54,6 +54,7 @@ export default async function handler(req, res) {
     res.status(500).send(`Alignment Error: ${error.message}`);
   }
 }
+
 
 
 
