@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     
     // COHORT & DATE (Both centered at the same X anchor point)
     // Using 1450 as an example anchor point (roughly 3/4 to the right)
-    const rightAnchor = 1450; 
+    const rightAnchor = 1350; 
     
     ctx.textAlign = 'center'; // This is the magic fix
     
@@ -56,3 +56,4 @@ export default async function handler(req, res) {
     res.status(500).send(`Alignment Error: ${error.message}`);
   }
 }
+
