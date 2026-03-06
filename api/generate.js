@@ -1,17 +1,20 @@
 const { createCanvas, loadImage, registerFont } = require('canvas');
 const path = require('path');
 
-// This tells the server to look for the font file you uploaded earlier
-// Make sure the file in your /fonts folder is EXACTLY named 'Arial.ttf'
 try {
     const fontPath = path.resolve('./fonts/Arial.ttf');
     registerFont(fontPath, { family: 'DiplomaFont' });
 } catch (e) {
-    console.log("Font registration skipped or failed, using fallback.");
+    console.log("Font registration failed, using fallback.");
 }
 
 export default async function handler(req, res) {
-  const { name = 'Graduate' } = req.query;
+  // 1. Grab all three variables from the URL
+  const { 
+    name = 'Graduate Name', 
+    cohort = 'Intermediate', 
+    date = 'November 25, 2025' 
+  } = req.query;
 
   try {
     const canvas = createCanvas(2000, 1414);
@@ -20,17 +23,28 @@ export default async function handler(req, res) {
     const background = await loadImage('https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg');
     ctx.drawImage(background, 0, 0, 2000, 1414);
 
-    // If 'DiplomaFont' failed, it will fall back to 'serif'
-    ctx.font = 'bold 85px "DiplomaFont", serif';
     ctx.fillStyle = '#0e1f13';
     ctx.textAlign = 'center';
-    
-    ctx.fillText(name, 1000, 510);
+
+    // --- DRAW THE NAME ---
+    // Increased size to 140px and moved down to 540px
+    ctx.font = 'bold 140px "DiplomaFont", serif';
+    ctx.fillText(name, 1000, 540); 
+
+    // --- DRAW THE COHORT TYPE ---
+    // Smaller font, placed lower (adjust 850 based on your design)
+    ctx.font = 'italic 50px "DiplomaFont", serif';
+    ctx.fillText(`${cohort} Cohort`, 1000, 850);
+
+    // --- DRAW THE GRADUATION DATE ---
+    // Placed at the bottom or near a signature line
+    ctx.font = '40px "DiplomaFont", serif';
+    ctx.fillText(date, 1000, 1200);
 
     const buffer = canvas.toBuffer('image/jpeg');
     res.setHeader('Content-Type', 'image/jpeg');
     res.status(200).send(buffer);
   } catch (error) {
-    res.status(500).send(`Error: ${error.message}`);
+    res.status(500).send(`Design Error: ${error.message}`);
   }
 }
