@@ -5,47 +5,48 @@ try {
     const fontPath = path.resolve('./fonts/Arial.ttf');
     registerFont(fontPath, { family: 'DiplomaFont' });
 } catch (e) {
-    console.log("Font registration failed, using fallback.");
+    console.log("Font registration failed.");
 }
 
 export default async function handler(req, res) {
-  // 1. Grab all three variables from the URL
-  const { 
-    name = 'Graduate Name', 
-    cohort = 'Intermediate', 
-    date = 'November 25, 2025' 
-  } = req.query;
+  const { name = 'Graduate Name', cohort = 'Intermediate', date = 'November 25, 2025' } = req.query;
 
   try {
-    const canvas = createCanvas(2000, 1414);
+    // --- 1. MATCH THE CANVAS TO YOUR FILE ---
+    const width = 1920; 
+    const height = 1080; 
+    
+    const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
+    
+    ctx.imageSmoothingEnabled = true; // Set to true for smoother background scaling
 
+    // --- 2. LOAD & SCALE BACKGROUND ---
     const background = await loadImage('https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg');
-    ctx.drawImage(background, 0, 0, 1920, 1080);
+    
+    // This tells the engine to draw the image from (0,0) to the FULL width and height
+    ctx.drawImage(background, 0, 0, width, height);
 
+    // --- 3. THE TEXT ---
     ctx.fillStyle = '#0e1f13';
     ctx.textAlign = 'center';
 
-    // --- DRAW THE NAME ---
-    // Increased size to 140px and moved down to 540px
-    ctx.font = 'bold 220px "DiplomaFont", serif';
-    ctx.fillText(name, 1000, 700); 
+    // Name (Adjust the '480' to move it up or down on your 1080p canvas)
+    ctx.font = 'bold 180px "DiplomaFont", serif';
+    ctx.fillText(name, width / 2, 480); 
 
-    // --- DRAW THE COHORT TYPE ---
-    // Smaller font, placed lower (adjust 850 based on your design)
+    // Cohort
     ctx.font = 'italic 50px "DiplomaFont", serif';
-    ctx.fillText(`${cohort} Cohort`, 1000, 850);
+    ctx.fillText(`${cohort} Cohort`, width / 2, 700);
 
-    // --- DRAW THE GRADUATION DATE ---
-    // Placed at the bottom or near a signature line
+    // Date
     ctx.font = '40px "DiplomaFont", serif';
-    ctx.fillText(date, 1000, 1200);
+    ctx.fillText(date, width / 2, 950);
 
-    const buffer = canvas.toBuffer('image/jpeg');
+    const buffer = canvas.toBuffer('image/jpeg', { quality: 0.95 });
     res.setHeader('Content-Type', 'image/jpeg');
     res.status(200).send(buffer);
   } catch (error) {
-    res.status(500).send(`Design Error: ${error.message}`);
+    res.status(500).send(`Alignment Error: ${error.message}`);
   }
 }
-
