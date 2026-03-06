@@ -1,33 +1,46 @@
-const { createCanvas, loadImage, registerFont } = require('canvas');
-const path = require('path');
+import { ImageResponse } from '@vercel/og';
 
-// 1. Register the font so the server knows it exists
-// This looks into your new /fonts folder
-registerFont(path.resolve('./fonts/Arial.ttf'), { family: 'DiplomaFont' });
+export const config = {
+  runtime: 'edge',
+};
 
-export default async function handler(req, res) {
-  const { name = 'Graduate' } = req.query;
+export default function handler(req) {
+  const { searchParams } = new URL(req.url);
+  const name = searchParams.get('name') || 'Graduate Name';
 
-  try {
-    const canvas = createCanvas(2000, 1414);
-    const ctx = canvas.getContext('2d');
-
-    // 2. Load the GTMGen Background
-    const background = await loadImage('https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg');
-    ctx.drawImage(background, 0, 0, 2000, 1414);
-
-    // 3. Use your newly registered font
-    ctx.font = 'bold 85px "DiplomaFont"'; 
-    ctx.fillStyle = '#0e1f13';
-    ctx.textAlign = 'center';
-    
-    // Position the name on the signature line
-    ctx.fillText(name, 1000, 510);
-
-    const buffer = canvas.toBuffer('image/jpeg');
-    res.setHeader('Content-Type', 'image/jpeg');
-    res.send(buffer);
-  } catch (error) {
-    res.status(500).send(`Font Loading Error: ${error.message}`);
-  }
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          backgroundImage: 'url(https://asset-generator-alpha.vercel.app/GTMGen-Certificate.jpg)',
+          backgroundSize: '100% 100%',
+          position: 'relative',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'serif', // This uses the built-in Edge serif font
+        }}
+      >
+        <h1
+          style={{
+            position: 'absolute',
+            top: '510px', 
+            width: '100%',
+            textAlign: 'center',
+            fontSize: '85px',
+            color: '#0e1f13',
+            fontWeight: 'bold',
+          }}
+        >
+          {name}
+        </h1>
+      </div>
+    ),
+    {
+      width: 2000,
+      height: 1414,
+    }
+  );
 }
