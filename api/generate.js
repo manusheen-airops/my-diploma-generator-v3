@@ -41,7 +41,7 @@ export default async function handler(req, res) {
 
     // Cohort (Placed at 1300px horizontally, which is roughly 2/3 of 1920)
     ctx.font = 'italic 50px "DiplomaFont", serif';
-    ctx.fillText(`${cohort} Cohort`, 1300, 700);
+    ctx.fillText(cohort, 1250, 800);
 
     // Date (Aligned with the Cohort at 1300px)
     ctx.font = '40px "DiplomaFont", serif';
@@ -54,6 +54,7 @@ export default async function handler(req, res) {
     res.status(500).send(`Alignment Error: ${error.message}`);
   }
 }
+
 
 
 
