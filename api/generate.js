@@ -2,16 +2,17 @@ const { createCanvas, loadImage, registerFont } = require('canvas');
 const path = require('path');
 const fs = require('fs');
 
-// 1. Resolve the path relative to the root of the project
-const fontPath = path.resolve('./fonts/Saans-Regular.ttf');
+// 1. Resolve path to your new Serrif font
+const fontPath = path.resolve('./fonts/SerrifVF.ttf');
 
-// 2. Debug Check: If the file is missing, the API will tell us why
+// 2. Debug Check
 if (!fs.existsSync(fontPath)) {
     console.error(`FONT NOT FOUND AT: ${fontPath}`);
 }
 
 try {
-    registerFont(fontPath, { family: 'Saans' });
+    // We'll call the family 'SerrifFont' to avoid confusion with the old one
+    registerFont(fontPath, { family: 'SerrifFont' });
 } catch (e) {
     console.error("Registration error:", e);
 }
@@ -31,23 +32,25 @@ export default async function handler(req, res) {
     ctx.fillStyle = '#1a1a1a';
     ctx.textAlign = 'center';
 
-    // 3. Applying the font (Removing "bold" as Saans Regular is often heavy enough)
-    ctx.font = '110px "Saans"'; 
+    // 3. APPLYING THE NEW FONT
+    // We use "SerrifFont" exactly as registered above
+    ctx.font = '110px "SerrifFont"'; 
     ctx.fillText(name, width / 2, 520); 
     
     const rightAnchor = 1400; 
     ctx.textAlign = 'center'; 
     
-    ctx.font = '50px "Saans"';
+    ctx.font = '50px "SerrifFont"';
     ctx.fillText(cohort, rightAnchor, 775);
     
-    ctx.font = '50px "Saans"';
+    ctx.font = '50px "SerrifFont"';
     ctx.fillText(date, rightAnchor, 925);
 
     const buffer = canvas.toBuffer('image/jpeg', { quality: 0.95 });
     res.setHeader('Content-Type', 'image/jpeg');
     res.status(200).send(buffer);
   } catch (error) {
-    res.status(500).send(`Font Error: ${error.message} - Path: ${fontPath}`);
+    // If this fails, the error message will now tell us the exact path it tried to use
+    res.status(500).send(`Font Error: ${error.message} - Using Path: ${fontPath}`);
   }
 }
