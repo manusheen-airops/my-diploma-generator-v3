@@ -2,7 +2,7 @@ const { createCanvas, loadImage, registerFont } = require('canvas');
 const path = require('path');
 
 try {
-    const fontPath = path.resolve('./fonts/Arial.ttf');
+    const fontPath = path.resolve('./fonts/Saans-Regular.ttf');
     registerFont(fontPath, { family: 'DiplomaFont' });
 } catch (e) {
     console.log("Font registration failed.");
@@ -56,5 +56,6 @@ export default async function handler(req, res) {
     res.status(500).send(`Alignment Error: ${error.message}`);
   }
 }
+
 
 
